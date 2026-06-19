@@ -197,6 +197,18 @@ footer{background:var(--base);border-top:1px solid var(--border);padding:70px 0 
 @media(max-width:600px){.svc-grid,.proj-grid,.rev-grid,.usps,.proc,.fgrid,.f2{grid-template-columns:1fr}.trust{gap:20px}.hero-cta{flex-direction:column}.hero-cta .btn{width:100%;justify-content:center}}
 
 </style>
+<style id="vt-cursor-css">
+@media (hover:hover) and (pointer:fine){
+  html,body{cursor:none}
+  a,button,input,select,textarea,label,summary,[role="button"],.btn,[onclick]{cursor:none}
+  #vt-cursor-dot,#vt-cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:2147483647;mix-blend-mode:normal}
+  #vt-cursor-dot{width:12px;height:12px;background:var(--primary,#D4410C);transition:width .18s ease,height .18s ease,opacity .18s}
+  #vt-cursor-ring{width:36px;height:36px;border:1.5px solid var(--primary,#D4410C);opacity:.55;transition:width .25s ease,height .25s ease,opacity .25s,border-color .25s}
+  body.vt-hover #vt-cursor-dot{width:20px;height:20px}
+  body.vt-hover #vt-cursor-ring{width:52px;height:52px;opacity:.3}
+}
+@media (hover:none),(pointer:coarse){#vt-cursor-dot,#vt-cursor-ring{display:none!important}}
+</style>
 </head>
 <body>
 <div class="cur"></div><div class="curr"></div>
@@ -362,6 +374,27 @@ const burger=document.querySelector('.burger'),links=document.querySelector('.na
 burger&&burger.addEventListener('click',()=>links.classList.toggle('open'));
 links&&links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
 const form=document.querySelector('form');form&&form.addEventListener('submit',e=>{e.preventDefault();const btn=form.querySelector('button[type=submit]');btn.querySelector('span').textContent='Anfrage gesendet';btn.style.background='var(--secondary)';btn.disabled=true;});
+</script>
+<div id="vt-cursor-dot" aria-hidden="true"></div>
+<div id="vt-cursor-ring" aria-hidden="true"></div>
+<script id="vt-cursor-js">
+(function(){
+  if(!window.matchMedia||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  var dot=document.getElementById('vt-cursor-dot'),ring=document.getElementById('vt-cursor-ring');
+  if(!dot||!ring)return;
+  var mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my,started=false;
+  addEventListener('mousemove',function(e){
+    mx=e.clientX;my=e.clientY;
+    dot.style.transform='translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
+    if(!started){started=true;rx=mx;ry=my;}
+  },{passive:true});
+  (function loop(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;
+    ring.style.transform='translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';
+    requestAnimationFrame(loop);})();
+  var sel='a,button,input,select,textarea,label,summary,[role=button],.btn,[onclick]';
+  document.addEventListener('mouseover',function(e){var t=e.target;if(t&&t.closest&&t.closest(sel))document.body.classList.add('vt-hover');},{passive:true});
+  document.addEventListener('mouseout',function(e){var t=e.target;if(t&&t.closest&&t.closest(sel))document.body.classList.remove('vt-hover');},{passive:true});
+})();
 </script>
 </body>
 </html>
